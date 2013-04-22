@@ -1,24 +1,25 @@
 import 'dart:html';
 import 'dart:async';
-import 'dart:math';
+import 'horatio.dart';
+import 'uha.dart';
 
 var CB = query('#commandbar');
 var PB = query('#pageboard');
-var RNG = new Random();
+var U = new UHA('UHA', 32);
 
 void main() {
   window.console.log('hola mundo!');
   setupCommandBar();
+  print("UHA: ${U.title}");
 }
 
 void loadWords(e) {
-  window.console.log('inside loadWords()...');
   HttpRequest.getString('/words.txt').then(processWords);
 }
 
 void processWords(w) {
   var wl = w.split("\n");
-  wl = wl.where((w) => w.length <=7).toList();
+  //wl = wl.where((w) => w.length <=7).toList();
   window.console.log("wl.length: ${wl.length}");
   shuffle(wl);
   PB.innerHtml = wl.sublist(0, 13).join(' ');
@@ -26,18 +27,8 @@ void processWords(w) {
 
 void setupCommandBar() {
   var bulw = new ButtonElement();
-  bulw.text = "load words!";
+  bulw.text = "generate random word list!";
   bulw.onClick.listen(loadWords);
   CB.append(bulw);
 }
 
-void shuffle(List l) {
-  var n = l.length;
-  while (n > 0) {
-    var i = RNG.nextInt(n);
-    n -= 1;
-    var t = l[n];
-    l[n] = l[i];
-    l[i] = t;
-  }
-}
